@@ -2,7 +2,8 @@
 import { computed } from 'vue';
 import { useGameStore } from '~/stores/game';
 
-defineProps<{ score: number }>();
+const props = defineProps<{ score: number }>()
+const textColor = computed(() => props.score > 128 ? 'text-orange-500' : 'text-light-800')
 
 const game = useGameStore();
 
@@ -14,11 +15,7 @@ const scoreColor = computed(() => {
 <template>
   <div flex max-w="600px" w-full mx-auto>
     <div text-left self-end>
-      <div 
-        class="lt-md:text-7xl text-8xl font-black font-mono text-light-800 leading-18"
-        :class="scoreColor"
-        data-test="score"
-      >
+      <div class="lt-md:text-7xl text-8xl font-black font-mono text-light-800 leading-18" :class="textColor" data-test="score">
         {{ score.toFixed(0) }}
       </div>
     </div>
