@@ -1,15 +1,24 @@
 <script setup lang="ts">
-import { useGameStore } from '~/stores/game'
+import { computed } from 'vue';
+import { useGameStore } from '~/stores/game';
 
-defineProps<{ score: number }>()
+defineProps<{ score: number }>();
 
-const game = useGameStore()
+const game = useGameStore();
+
+const scoreColor = computed(() => {
+  return score >= 128 ? 'text-orange-500' : 'text-white';
+});
 </script>
 
 <template>
   <div flex max-w="600px" w-full mx-auto>
     <div text-left self-end>
-      <div class="lt-md:text-7xl text-8xl font-black font-mono text-light-800 leading-18">
+      <div 
+        class="lt-md:text-7xl text-8xl font-black font-mono text-light-800 leading-18"
+        :class="scoreColor"
+        data-test="score"
+      >
         {{ score.toFixed(0) }}
       </div>
     </div>
