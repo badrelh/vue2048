@@ -1,0 +1,53 @@
+name: manual-deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'qa'
+        type: choice
+        options:
+          - qa
+          - prod
+
+jobs:
+  build:
+    uses: ./.github/workflows/setup-and-build.yml
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    environment: ${{ github.event.inputs.environment }}
+    
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifact
+          path: dist
+
+      - name: Deploy to ${{ github.event.inputs.environment }}
+        env:
+          QA_DEPLOY_TOKEN: ${{ secrets.QA_DEPLOY_TOKEN }}
+          PROD_DEPLOY_TOKEN: ${{ secrets.PROD_DEPLOY_TOKEN }}
+        run: |
+          echo "Deploying to ${{ github.event.inputs.environment }} environment"
+
+          if [[ "${{ github.event.inputs.environment }}" == "qa" ]]; then
+            npx @azure/static-web-apps-cli deploy ./dist \
+              --app-name stapp-vue2048-qa \
+              --env preview \
+              --deployment-token "$QA_DEPLOY_TOKEN"
+            echo "App deployed to QA: https://stapp-vue2048-qa.azurestaticapps.net"
+          elif [[ "${{ github.event.inputs.environment }}" == "prod" ]]; then
+            npx @azure/static-web-apps-cli deploy ./dist \
+              --app-name stapp-vue2048-prod \
+              --env production \
+              --deployment-token "$PROD_DEPLOY_TOKEN"
+            echo "App deployed to PROD: https://stapp-vue2048-prod.azurestaticapps.net"
+          else
+            echo "Unknown environment: ${{ github.event.inputs.environment }}"
+            exit 1
+          fi
