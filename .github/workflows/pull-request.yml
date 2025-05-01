@@ -2,6 +2,18 @@ name: pull-request
 
 on:
   pull_request:
+    paths-ignore:
+      - 'docs/**'
+  workflow_dispatch:
+    inputs:
+      run_quality_checks:
+        description: 'Run linter and tests?'
+        required: true
+        default: 'true'
+        type: boolean
+  schedule:
+    - cron: '0 8 * * 1'
+
     
 
 jobs:
@@ -11,6 +23,7 @@ jobs:
   quality-checks:
     runs-on: ubuntu-latest
     needs: build
+    if: ${{ github.event.inputs.run_quality_checks != 'false'}}
 
     steps:
       - name: Checkout repository
