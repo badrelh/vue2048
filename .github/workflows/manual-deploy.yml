@@ -38,15 +38,13 @@ jobs:
           if [[ "${{ github.event.inputs.environment }}" == "qa" ]]; then
             npx @azure/static-web-apps-cli deploy ./dist \
               --app-name stapp-vue2048-qa \
-              --env preview \
+              --env qa \
               --deployment-token "$QA_DEPLOY_TOKEN"
-            echo "App deployed to QA: https://stapp-vue2048-qa.azurestaticapps.net"
           elif [[ "${{ github.event.inputs.environment }}" == "prod" ]]; then
             npx @azure/static-web-apps-cli deploy ./dist \
               --app-name stapp-vue2048-prod \
               --env production \
               --deployment-token "$PROD_DEPLOY_TOKEN"
-            echo "App deployed to PROD: https://stapp-vue2048-prod.azurestaticapps.net"
           else
             echo "Unknown environment: ${{ github.event.inputs.environment }}"
             exit 1
