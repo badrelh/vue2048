@@ -1,15 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useGameStore } from '~/stores/game';
+import { computed } from 'vue'
+import { useGameStore } from '~/stores/game'
 
 const props = defineProps<{ score: number }>()
 const textColor = computed(() => props.score > 128 ? 'text-orange-500' : 'text-light-800')
 
-const game = useGameStore();
-
-const scoreColor = computed(() => {
-  return score >= 128 ? 'text-orange-500' : 'text-white';
-});
+const game = useGameStore()
 </script>
 
 <template>
