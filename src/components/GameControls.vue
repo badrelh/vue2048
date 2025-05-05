@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import { useGameStore } from '~/stores/game'
 
 const props = defineProps<{ score: number }>()
-const textColor = computed(() => props.score > 128 ? 'text-orange-500' : 'text-light-800')
+const textColor = computed(() => props.score >= 128 ? 'text-orange-500' : 'text-light-800')
 
 const game = useGameStore()
 </script>
